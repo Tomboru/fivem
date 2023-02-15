@@ -271,6 +271,27 @@ static InitFunction initFunction([] ()
 	{
 		context.SetResult(seCheckPrivilege(context.CheckArgument<const char*>(0)));
 	});
+	
+	fx::ScriptEngine::RegisterNativeHandler("GET_PLAYER_ACEGROUP", [](fx::ScriptContext& context)
+	{
+    	// Get the license of the player
+    	const char* license = context.CheckArgument<const char*>(0);
+
+    	// Get the player's server ID by their license
+    	int playerId = GetPlayerIdByLicense(license);
+
+    	// Check if the player exists
+    	if (playerId < 0)
+    	{
+        	context.SetResult("Player not found.");
+        	return;
+    	}
+
+    	// Get the player's ACE group
+    	std::string aceGroup = GetPlayerAceGroup(playerId);
+
+    	context.SetResult(aceGroup.c_str());
+	});
 
 	fx::ScriptEngine::RegisterNativeHandler("IS_PRINCIPAL_ACE_ALLOWED", [](fx::ScriptContext& context)
 	{
